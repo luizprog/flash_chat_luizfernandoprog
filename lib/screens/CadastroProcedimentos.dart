@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'MenuInicial.dart';
-import 'MenuInicialUsuario.dart';
+import 'chat_screen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
-class LoginScreen extends StatefulWidget {
+class CadastroProcedimentosScreen extends StatefulWidget {
+  static String ID = 'CadastroProcedimentos_screen';
   @override
-  static String ID = 'login_screen';
-
-  _LoginScreenState createState() => _LoginScreenState();
+  _CadastroProcedimentosScreenState createState() =>
+      _CadastroProcedimentosScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _CadastroProcedimentosScreenState
+    extends State<CadastroProcedimentosScreen> {
   final _auth = FirebaseAuth.instance;
   bool showSpinner = false;
   String usuario;
@@ -53,12 +53,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.lightBlueAccent, width: 1.0),
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
                 ),
@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   senha = value;
                 },
                 decoration: InputDecoration(
-                  hintText: 'Enter your password.',
+                  hintText: 'Enter your password',
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
@@ -81,12 +81,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.lightBlueAccent, width: 1.0),
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(color: Colors.lightBlueAccent, width: 2.0),
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
                 ),
@@ -97,7 +97,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 child: Material(
-                  color: Colors.lightBlueAccent,
+                  color: Colors.blueAccent,
                   borderRadius: BorderRadius.all(Radius.circular(30.0)),
                   elevation: 5.0,
                   child: MaterialButton(
@@ -105,18 +105,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       setState(() {
                         showSpinner = true;
                       });
-
                       try {
-                        final newUser = await _auth.signInWithEmailAndPassword(
-                            email: usuario, password: senha);
+                        final newUser =
+                            await _auth.createUserWithEmailAndPassword(
+                                email: usuario, password: senha);
                         if (newUser != null) {
-                          if (newUser.email.toString() ==
-                              'luizdeverdade@gmail.com') {
-                            Navigator.pushNamed(context, MenuInicialScreen.ID);
-                          } else {
-                            Navigator.pushNamed(
-                                context, MenuInicialUsuarioScreen.ID);
-                          }
+                          Navigator.pushNamed(context, ChatScreen.ID);
                         }
                         setState(() {
                           showSpinner = false;
@@ -129,7 +123,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     minWidth: 200.0,
                     height: 42.0,
                     child: Text(
-                      'Log In',
+                      'Register',
+                      style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),

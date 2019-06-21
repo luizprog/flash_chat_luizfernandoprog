@@ -23,7 +23,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
 
     controller.addListener(() {
       setState(() {});
-      print(animation.value);
     });
   }
 
@@ -72,24 +71,6 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                   height: 42.0,
                   child: Text(
                     'Log In',
-                  ),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.0),
-              child: Material(
-                color: Colors.blueAccent,
-                borderRadius: BorderRadius.circular(30.0),
-                elevation: 5.0,
-                child: MaterialButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, 'registration_screen');
-                  },
-                  minWidth: 200.0,
-                  height: 42.0,
-                  child: Text(
-                    'Register',
                   ),
                 ),
               ),
