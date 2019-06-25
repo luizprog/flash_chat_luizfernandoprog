@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'MenuInicial.dart';
 import 'MenuInicialUsuario.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -13,9 +14,35 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _auth = FirebaseAuth.instance;
+  final _firestore = Firestore.instance;
   bool showSpinner = false;
   String usuario;
   String senha;
+  String permissao;
+
+  void getUsuarioPermisssao() async {
+    final permissao = await _firestore.collection('usuarios').getDocuments();
+
+    for (var usuariosLogado in permissao.documents) {
+      if (usuariosLogado.data['usuario'].toString() == usuario) {
+        if (usuariosLogado.data['nivelDeAcesso'] == 'administrador') {
+          Navigator.pushNamed(context, MenuInicialScreen.ID);
+        } else {
+          Navigator.pushNamed(context, MenuInicialUsuarioScreen.ID);
+        }
+      }
+    }
+  }
+
+  /* getSnapshot Stream message
+  * void messageStream() async{
+  *   await for (var snapshots in _firestore.collection('usuarios').snapshots()){
+  *     for(var message in snapshot.documents){
+  *       print(message.data);
+  *     }
+  *   }
+  * }
+  * */
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +67,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 48.0,
               ),
               TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   usuario = value;
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
@@ -67,13 +96,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 height: 8.0,
               ),
               TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
                 obscureText: true,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   senha = value;
                 },
                 decoration: InputDecoration(
+                  fillColor: Colors.black,
                   hintText: 'Enter your password.',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
@@ -109,18 +141,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       try {
                         final newUser = await _auth.signInWithEmailAndPassword(
                             email: usuario, password: senha);
-                        if (newUser != null) {
-                          if (newUser.email.toString() ==
-                              'luizdeverdade@gmail.com') {
-                            Navigator.pushNamed(context, MenuInicialScreen.ID);
-                          } else {
-                            Navigator.pushNamed(
-                                context, MenuInicialUsuarioScreen.ID);
-                          }
-                        }
+
                         setState(() {
                           showSpinner = false;
                         });
+
+                        getUsuarioPermisssao();
                       } catch (e) {
                         print("Erro");
                         print(e);

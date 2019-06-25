@@ -19,12 +19,36 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String senha;
   String tipo;
 
+  List _cities = ['administrador', 'comum'];
+
+  List<DropdownMenuItem<String>> _dropDownMenuItems;
+  String _currentCity;
+
   @override
-  void initState(){
-    _comboTipo.addAll(['administrador','comum']);
-    tipo = _comboTipo.elementAt(0);
+  void initState() {
+    _comboTipo.addAll(['administrador', 'comum']);
+    //  tipo = _comboTipo.elementAt(0);
+    print(tipo);
+    print(_comboTipo.toString());
+
+    _dropDownMenuItems = getDropDownMenuItems();
+    tipo = _dropDownMenuItems[0].value;
   }
 
+  List<DropdownMenuItem<String>> getDropDownMenuItems() {
+    List<DropdownMenuItem<String>> items = new List();
+    for (String city in _cities) {
+      items.add(new DropdownMenuItem(value: city, child: new Text(city)));
+    }
+    return items;
+  }
+
+  void changedDropDownItem(String selectedCity) {
+    setState(() {
+      _currentCity = selectedCity;
+      print(selectedCity);
+    });
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,12 +72,14 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 48.0,
               ),
               TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   usuario = value;
                 },
                 decoration: InputDecoration(
                   hintText: 'Enter your email',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
@@ -74,16 +100,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               SizedBox(
                 height: 8.0,
               ),
-
               TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
                 obscureText: true,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
                   senha = value;
                 },
                 decoration: InputDecoration(
-
                   hintText: 'Enter your password',
+                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
@@ -105,50 +131,23 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: 24.0,
               ),
 
+              /**/
 
-              new Column(
-                children: <Widget>[
-                  new DropdownButton(value: _comboTipo,items: _comboTipo.map((String tipo){
-                    return new DropdownMenuItem(value: tipo,child: new Row(
-                      children: <Widget>[
-                        new Text('${tipo}')
-                      ],
-                    ),);
-                  }).toList(),
-                      onChanged: (String tipo){ print("qwert");},
-                  )
-                ],
-              ),
-
-              TextField(
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  tipo = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Entre com o tipo',
-                  contentPadding:
-                  EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                    BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: new DropdownButton(
+                  value: _currentCity,
+                  style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                  items: _dropDownMenuItems,
+                  onChanged: changedDropDownItem,
                 ),
-
               ),
               SizedBox(
                 height: 24.0,
               ),
+
+              /**/
+
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 16.0),
                 child: Material(
@@ -166,8 +165,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 email: usuario, password: senha);
 
                         _firestore.collection('usuarios').add({
-                          'nivelDeAcesso': ,
-                          'usuario': usuario,});
+                          'nivelDeAcesso': _currentCity,
+                          'usuario': usuario,
+                        });
 
                         if (newUser != null) {
                           Navigator.pushNamed(context, ChatScreen.ID);

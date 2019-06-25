@@ -40,21 +40,22 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Fancy Dress'),
+        backgroundColor: Colors.lightBlueAccent,
+        title: Text('...'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.playlist_play),
-            tooltip: 'Air it',
+            tooltip: '....',
             //onPressed: ,
           ),
           IconButton(
             icon: Icon(Icons.playlist_add),
-            tooltip: 'Restitch it',
+            tooltip: '.....',
             //onPressed: _restitchDress,
           ),
           IconButton(
             icon: Icon(Icons.playlist_add_check),
-            tooltip: 'Repair it',
+            tooltip: '......',
             //onPressed: _repairDress,
           ),
         ],
@@ -63,42 +64,50 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 16.0),
-          child: Material(
-            color: Colors.blueAccent,
-            borderRadius: BorderRadius.circular(30.0),
-            elevation: 5.0,
-            child: MaterialButton(
-              onPressed: () {
-                {
-                  setState(() {
-                    showSpinner = true;
-                  });
-
-                  try {
-                    Navigator.pushNamed(context, RegistrationScreen.ID);
-                    setState(() {
-                      showSpinner = false;
-                    });
-                  } catch (e) {
-                    print("Erro");
-                    print(e);
-                  }
-                }
-              },
-              minWidth: 200.0,
-              height: 42.0,
-              child: Text(
-                'Register',
+          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              SizedBox(
+                height: 48.0,
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.0),
+                child: Material(
+                  color: Colors.lightBlueAccent,
+                  borderRadius: BorderRadius.circular(30.0),
+                  elevation: 5.0,
+                  child: MaterialButton(
+                    onPressed: () {
+                      {
+                        setState(() {
+                          showSpinner = true;
+                        });
+
+                        try {
+                          Navigator.pushNamed(context, RegistrationScreen.ID);
+                          setState(() {
+                            showSpinner = false;
+                          });
+                        } catch (e) {
+                          print("Erro");
+                          print(e);
+                        }
+                      }
+                    },
+                    minWidth: 200.0,
+                    height: 42.0,
+                    child: Text(
+                      'Registrar',
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
     );
-  }
-
-  bool equalsIgnoreCase(String string1, String string2) {
-    return string1?.toLowerCase() == string2?.toLowerCase();
   }
 }
