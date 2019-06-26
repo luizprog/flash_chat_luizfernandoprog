@@ -41,12 +41,12 @@ class _WelcomeScreenState extends State<WelcomeScreen>
                 Hero(
                   tag: 'logo',
                   child: Container(
-                    child: Image.asset('images/logo.png'),
+                    child: Image.asset('images/auti.png'),
                     height: animation.value * 100,
                   ),
                 ),
                 Text(
-                  'Flash Chat',
+                  'Auti app',
                   style: TextStyle(
                     fontSize: 45.0,
                     fontWeight: FontWeight.w900,

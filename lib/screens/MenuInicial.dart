@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'registration_screen.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 
 class MenuInicialScreen extends StatefulWidget {
   @override
@@ -33,6 +34,22 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
         print('qwertyu');
       }
     } catch (e) {
+      print(e);
+    }
+  }
+
+  void gotoRegistration() {
+    setState(() {
+      showSpinner = true;
+    });
+
+    try {
+      Navigator.pushNamed(context, RegistrationScreen.ID);
+      setState(() {
+        showSpinner = false;
+      });
+    } catch (e) {
+      print("Erro");
       print(e);
     }
   }
@@ -107,6 +124,38 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
             ],
           ),
         ),
+      ),
+      floatingActionButton: SpeedDial(
+        // onPressed: () {
+        // Add your onPressed code here!
+        // },
+        backgroundColor: Colors.blue,
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        children: [
+          SpeedDialChild(
+              child: Icon(Icons.accessibility),
+              backgroundColor: Colors.blue,
+              label: 'Novo usuario',
+              //labelStyle: TextTheme(fontSize: 18.0),
+              onTap: () => gotoRegistration()),
+          SpeedDialChild(
+            child: Icon(Icons.person_add),
+            backgroundColor: Colors.green,
+            label: 'Novo procedimento para usuario',
+            //labelStyle: TextTheme(fontSize: 18.0),
+            onTap: () => print('SECOND CHILD'),
+          ),
+          SpeedDialChild(
+            child: Icon(Icons.group_add),
+            backgroundColor: Colors.lightGreen,
+            label: 'Novo procedimento todos usuarios',
+            //labelStyle: TextTheme(fontSize: 18.0),
+            onTap: () => print('THIRD CHILD'),
+          ),
+        ],
       ),
     );
   }
