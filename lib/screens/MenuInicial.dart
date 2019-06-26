@@ -30,12 +30,98 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        print(user.email);
-        print('qwertyu');
       }
     } catch (e) {
       print(e);
     }
+  }
+
+  ListView getProcedimentosUsuarioAdmLogado() {
+    return ListView(
+      children: const <Widget>[
+        Card(child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(),
+            title: Text('One-line with leading widget'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('One-line with trailing widget'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(),
+            title: Text('One-line with both widgets'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('One-line dense ListTile'),
+            dense: true,
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(size: 56.0),
+            title: Text('Two-line ListTile'),
+            subtitle: Text('Here is a second line'),
+            trailing: Icon(Icons.more_vert),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            leading: FlutterLogo(size: 72.0),
+            title: Text('Three-line ListTile'),
+            subtitle:
+                Text('A sufficiently long subtitle warrants three lines.'),
+            trailing: Icon(Icons.more_vert),
+            isThreeLine: true,
+          ),
+        ),
+        Card(
+            color: Colors.blueGrey,
+            child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+            color: Colors.blueGrey,
+            child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+            color: Colors.blueGrey,
+            child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+            color: Colors.blueGrey,
+            child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+            color: Colors.blueGrey,
+            child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+            color: Colors.blueGrey,
+            child: ListTile(title: Text('One-line ListTile'))),
+        Card(
+          color: Colors.blueGrey,
+          child: ListTile(
+            //leading: FlutterLogo(),
+            title: Text('One-line with leading widget'),
+          ),
+        ),
+      ],
+    );
+    // async {
+    /* final permissao = await _firestore.collection('usuarios').getDocuments();
+
+    for (var usuariosLogado in permissao.documents) {
+      if (usuariosLogado.data['usuario'].toString() == usuario) {
+        if (usuariosLogado.data['nivelDeAcesso'] == 'administrador') {
+          Navigator.pushNamed(context, MenuInicialScreen.ID);
+        } else {
+          Navigator.pushNamed(context, MenuInicialUsuarioScreen.ID);
+        }
+      }
+    }*/
   }
 
   void gotoRegistration() {
@@ -80,49 +166,8 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(
-                height: 48.0,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Material(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(30.0),
-                  elevation: 5.0,
-                  child: MaterialButton(
-                    onPressed: () {
-                      {
-                        setState(() {
-                          showSpinner = true;
-                        });
-
-                        try {
-                          Navigator.pushNamed(context, RegistrationScreen.ID);
-                          setState(() {
-                            showSpinner = false;
-                          });
-                        } catch (e) {
-                          print("Erro");
-                          print(e);
-                        }
-                      }
-                    },
-                    minWidth: 200.0,
-                    height: 42.0,
-                    child: Text(
-                      'Registrar',
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+        child: Container(
+          child: getProcedimentosUsuarioAdmLogado(),
         ),
       ),
       floatingActionButton: SpeedDial(

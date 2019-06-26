@@ -105,6 +105,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 obscureText: true,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
+                  _currentCity = 'comum';
                   senha = value;
                 },
                 decoration: InputDecoration(
@@ -132,7 +133,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
 
               /**/
-
+              /*
               Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -180,7 +181,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               SizedBox(
                 height: 24.0,
-              ),
+              ),*/
 
               /**/
 
