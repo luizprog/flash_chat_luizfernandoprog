@@ -19,6 +19,11 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
   FirebaseUser loggedInUser;
   String messageText;
 
+  static final double myTextSize = 30.0;
+  final double myIconSize = 30.0;
+  final TextStyle myTextStyle =
+      new TextStyle(color: Colors.black, fontSize: myTextSize);
+
   @override
   void initState() {
     super.initState();
@@ -30,8 +35,6 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        print(user.email);
-        print('qwertyu');
       }
     } catch (e) {
       print(e);
@@ -42,24 +45,7 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
-        title: Text('...'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.playlist_play),
-            tooltip: '....',
-            //onPressed: ,
-          ),
-          IconButton(
-            icon: Icon(Icons.playlist_add),
-            tooltip: '.....',
-            //onPressed: _restitchDress,
-          ),
-          IconButton(
-            icon: Icon(Icons.playlist_add_check),
-            tooltip: '......',
-            //onPressed: _repairDress,
-          ),
-        ],
+        title: Text('Auti app - Paciente'),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
@@ -67,46 +53,71 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            // Makes the cards stretch in horizontal axis
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(
-                height: 48.0,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Material(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(30.0),
-                  elevation: 5.0,
-                  child: MaterialButton(
-                    onPressed: () {
-                      {
-                        setState(() {
-                          showSpinner = true;
-                        });
-
-                        try {
-                          //Navigator.pushNamed(context, RegistrationScreen.ID);
-                          //setState(() {
-                          //  showSpinner = false;
-                          //});
-                          print("qwe,mn");
-                        } catch (e) {
-                          //print("Erro");
-                          print(e);
-                        }
-                      }
-                    },
-                    minWidth: 200.0,
-                    height: 42.0,
-                    child: Text(
-                      'Tarefas',
-                    ),
+              // Setup the card
+              new MyCard(
+                  title: new Text(
+                    "Feito pelos pais",
+                    style: myTextStyle,
                   ),
-                ),
-              ),
+                  icon: new Icon(Icons.done,
+                      size: myIconSize, color: Colors.deepOrange)),
+              new MyCard(
+                  title: new Text(
+                    "Feito com ajuda",
+                    style: myTextStyle,
+                  ),
+                  icon: new Icon(Icons.done,
+                      size: myIconSize, color: Colors.green)),
+              new MyCard(
+                  title: new Text(
+                    "Sucesso",
+                    style: myTextStyle,
+                  ),
+                  icon: new Icon(Icons.done_all,
+                      size: myIconSize, color: Colors.green)),
+              new MyCard(
+                  title: new Text(
+                    "Atrasado",
+                    style: myTextStyle,
+                  ),
+                  icon: new Icon(
+                    Icons.error_outline,
+                    size: myIconSize,
+                    color: Colors.orange,
+                  )),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class MyCard extends StatelessWidget {
+  final Widget icon;
+  final Widget title;
+
+  // Constructor. {} here denote that they are optional values i.e you can use as: new MyCard()
+  MyCard({this.title, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      padding: const EdgeInsets.only(bottom: 1.0),
+      child: new Card(
+        elevation: 1.0,
+        color: Colors.white70,
+        child: new Container(
+          padding: const EdgeInsets.all(15.0),
+          child: new Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            textDirection: TextDirection.ltr,
+            textBaseline: TextBaseline.alphabetic,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[this.title, this.icon],
           ),
         ),
       ),

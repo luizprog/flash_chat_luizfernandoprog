@@ -5,6 +5,7 @@ import 'package:flash_chat/screens/registration_screen.dart';
 import 'package:flash_chat/screens/chat_screen.dart';
 import 'package:flash_chat/screens/MenuInicial.dart';
 import 'package:flash_chat/screens/MenuInicialUsuario.dart';
+import 'package:flash_chat/screens/RegistroAtividadeIndividualScreen.dart';
 
 void main() => runApp(FlashChat());
 
@@ -25,6 +26,8 @@ class FlashChat extends StatelessWidget {
         ChatScreen.ID: (context) => ChatScreen(),
         MenuInicialScreen.ID: (context) => MenuInicialScreen(),
         MenuInicialUsuarioScreen.ID: (context) => MenuInicialUsuarioScreen(),
+        RegistroAtividadeIndividualScreen.ID: (context) =>
+            RegistroAtividadeIndividualScreen(),
       },
     );
   }
