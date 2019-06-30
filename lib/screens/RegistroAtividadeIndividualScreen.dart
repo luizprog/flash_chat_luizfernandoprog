@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'chat_screen.dart';
+import 'MenuInicial.dart';
+import 'MenuInicialUsuario.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -21,6 +22,15 @@ class _RegistroAtividadeIndividualScreenState
   String senha;
   String tipo;
 
+  String nomeInformado;
+  String procedimentoInformado;
+  String descricaoInformado;
+  String agendaDiaInformado;
+  String agendaHoraInformado;
+  DatePickerMode diaCadastro;
+  String tipoConclusaoInformado;
+  String instrutorInformado;
+
   List _cities = ['administrador', 'comum'];
 
   List<DropdownMenuItem<String>> _dropDownMenuItems;
@@ -31,6 +41,7 @@ class _RegistroAtividadeIndividualScreenState
     _comboTipo.addAll(['administrador', 'comum']);
     _dropDownMenuItems = getDropDownMenuItems();
     tipo = _dropDownMenuItems[0].value;
+    usuario = _dropDownMenuItems[1].value;
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
@@ -48,6 +59,13 @@ class _RegistroAtividadeIndividualScreenState
     });
   }
 
+  String validadorDeNome(String value) {
+    if (value.isEmpty) {
+      return 'O nome deve ser informaado.';
+    }
+    return '';
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -55,526 +73,209 @@ class _RegistroAtividadeIndividualScreenState
         title: Text('Auti app - Cuidador'),
       ),
       backgroundColor: Colors.white,
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Hero(
-                tag: 'logo',
-                child: Container(
-                  height: 200.0,
-                  child: Image.asset('images/auti.png'),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            SizedBox(
+              height: 48.0,
+            ),
+
+            Container(
+              height: 200.0,
+              child: Image.asset('images/auti.png'),
+            ),
+
+            // "Nome do form"
+            Container(
+              child: TextField(
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
                 decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  enabled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  icon: Icon(
+                    Icons.person_add,
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'nome do aluno/paciente',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                ),
+                onChanged: (String value) {
+                  this.nomeInformado = value;
+                },
+              ),
+            ),
+
+            // "Nome do form"
+
+            Container(
+              child: TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                decoration: InputDecoration(
+                  enabled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  icon: Icon(
+                    Icons.featured_play_list,
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'Procedimento',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  helperText: 'Informe o procedimento atividade',
+                ),
+                maxLines: 2,
+                onChanged: (String value) {
+                  this.procedimentoInformado = value;
+                },
+              ),
+            ),
+
+            // "Nome do form"
+
+            Container(
+              child: TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                decoration: InputDecoration(
+                  enabled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  icon: Icon(
+                    Icons.description,
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'descricao do procedimento',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  helperText: 'Informe como e oque deve ser feito na atividade',
+                ),
+                maxLines: 5,
+                onChanged: (String value) {
+                  this.descricaoInformado = value;
+                },
+              ),
+            ),
+
+            // "Nome do form"
+
+            Container(
+              child: TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                decoration: InputDecoration(
+                  enabled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  icon: Icon(
+                    Icons.calendar_today,
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'Dias da semana',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  helperText: 'dia da semana ',
+                ),
+                onChanged: (String value) {
+                  this.agendaDiaInformado = value;
+                },
+              ),
+            ),
+
+            Container(
+              child: TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                decoration: InputDecoration(
+                  enabled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  icon: Icon(
+                    Icons.watch_later,
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'Hora de fazer a atividade',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
+                  helperText: 'Hora de fazer a atividade',
+                ),
+                onChanged: (String value) {
+                  this.agendaHoraInformado = value;
+                },
+              ),
+            ),
+
+            Container(
+              child: TextField(
+                style: TextStyle(color: Colors.black.withOpacity(1.0)),
+                decoration: InputDecoration(
+                  enabled: true,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  icon: Icon(
+                    Icons.cloud_done,
+                    color: Colors.black,
                   ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'Conclusao',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
+                  helperText: 'tipo de conclusao',
                 ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
+                onChanged: (String value) {
+                  this.tipoConclusaoInformado = value;
                 },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
               ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 48.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 8.0,
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                obscureText: true,
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  senha = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your password',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                textAlign: TextAlign.center,
-                onChanged: (value) {
-                  usuario = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'Enter your email',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  contentPadding:
-                      EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 1.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.blueAccent, width: 2.0),
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Material(
-                  color: Colors.blueAccent,
-                  borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                  elevation: 5.0,
-                  child: MaterialButton(
-                    onPressed: () async {
-                      setState(() {
-                        showSpinner = true;
+            ),
+
+            //button save
+            SizedBox(
+              height: 48.0,
+            ),
+            Container(
+              child: Material(
+                color: Colors.blueAccent,
+                borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                elevation: 5.0,
+                child: MaterialButton(
+                  onPressed: () async {
+                    setState(() {
+                      showSpinner = true;
+                    });
+
+                    try {
+                      _firestore.collection('procedimento').add({
+                        'usuario': nomeInformado,
+                        'procedimento': procedimentoInformado,
+                        'descricao': descricaoInformado,
+                        'conclusao': tipoConclusaoInformado,
+                        'agendadia': agendaDiaInformado,
+                        'agendahora': agendaHoraInformado,
+                        'dataDaInclusao': DateTime.now(),
+                        'instrutor': usuario,
                       });
-                      _currentCity = 'comum';
-                      try {
-                        final newUser =
-                            await _auth.createUserWithEmailAndPassword(
-                                email: usuario, password: senha);
 
-                        _firestore.collection('usuarios').add({
-                          'nivelDeAcesso': _currentCity,
-                          'usuario': usuario,
-                        });
-
-                        if (newUser != null) {
-                          Navigator.pushNamed(context, ChatScreen.ID);
-                        }
-                        setState(() {
-                          showSpinner = false;
-                        });
-                      } catch (e) {
-                        print("Erro");
-                        print(e);
-                      }
-                    },
-                    minWidth: 200.0,
-                    height: 42.0,
-                    child: Text(
-                      'Salvar',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                      setState(() {
+                        showSpinner = false;
+                      });
+                      Navigator.pushNamed(context, MenuInicialScreen.ID);
+                    } catch (e) {
+                      print("Erro");
+                      print(e);
+                    }
+                  },
+                  minWidth: 200.0,
+                  height: 42.0,
+                  child: Text(
+                    'Salvar',
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+            SizedBox(
+              height: 48.0,
+            ),
+          ],
         ),
       ),
     );

@@ -42,11 +42,10 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
-        title: Text('...'),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.playlist_play),
-            tooltip: '....',
+
             //onPressed: ,
           ),
           IconButton(
@@ -56,8 +55,6 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
           ),
           IconButton(
             icon: Icon(Icons.playlist_add_check),
-            tooltip: '......',
-            //onPressed: _repairDress,
           ),
         ],
       ),
