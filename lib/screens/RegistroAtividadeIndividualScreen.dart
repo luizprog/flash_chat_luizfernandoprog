@@ -4,6 +4,7 @@ import 'MenuInicial.dart';
 import 'MenuInicialUsuario.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class RegistroAtividadeIndividualScreen extends StatefulWidget {
   static String ID = 'RegistroAtividadeIndividualScreen';
@@ -16,6 +17,11 @@ class _RegistroAtividadeIndividualScreenState
     extends State<RegistroAtividadeIndividualScreen> {
   final _auth = FirebaseAuth.instance;
   final _firestore = Firestore.instance;
+  final firestore = Firestore.instance;
+  var _mySelection;
+  var _mySelection2;
+  var _mySelection3;
+
   List<String> _comboTipo = new List<String>();
   bool showSpinner = false;
   String usuario;
@@ -30,6 +36,8 @@ class _RegistroAtividadeIndividualScreenState
   DatePickerMode diaCadastro;
   String tipoConclusaoInformado;
   String instrutorInformado;
+
+  String dropdownValue = 'One';
 
   List _cities = ['administrador', 'comum'];
 
@@ -66,6 +74,20 @@ class _RegistroAtividadeIndividualScreenState
     return '';
   }
 
+  String lastSelectedValue;
+  void showDemoDialog({BuildContext context, Widget child}) {
+    showCupertinoDialog<String>(
+      context: context,
+      builder: (BuildContext context) => child,
+    ).then((String value) {
+      if (value != null) {
+        setState(() {
+          lastSelectedValue = value;
+        });
+      }
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -89,25 +111,41 @@ class _RegistroAtividadeIndividualScreenState
             ),
 
             // "Nome do form"
+            SizedBox(
+              height: 48.0,
+            ),
             Container(
-              child: TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                decoration: InputDecoration(
-                  enabled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  icon: Icon(
-                    Icons.person_add,
-                    color: Colors.black,
-                  ),
-                  hintText: 'nome do aluno/paciente',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                ),
-                onChanged: (String value) {
-                  this.nomeInformado = value;
+              child: StreamBuilder<QuerySnapshot>(
+                stream: firestore.collection('usuarios').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) return const Text('Carregando...');
+                  return new DropdownButton<String>(
+                    isDense: true,
+                    hint: new Text(
+                      "Selecione o aluno",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    value: _mySelection,
+                    onChanged: (String newValue) {
+                      this.nomeInformado = newValue;
+                    },
+                    items: snapshot.data.documents.map((map) {
+                      return new DropdownMenuItem<String>(
+                        value: map["usuario"].toString(),
+                        child: new Text(
+                          map["usuario"],
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      );
+                    }).toList(),
+                  );
                 },
               ),
+            ),
+
+            SizedBox(
+              height: 48.0,
             ),
 
             // "Nome do form"
@@ -163,25 +201,43 @@ class _RegistroAtividadeIndividualScreenState
             // "Nome do form"
 
             Container(
-              child: TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                decoration: InputDecoration(
-                  enabled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  icon: Icon(
-                    Icons.calendar_today,
-                    color: Colors.black,
-                  ),
-                  hintText: 'Dias da semana',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  helperText: 'dia da semana ',
-                ),
-                onChanged: (String value) {
-                  this.agendaDiaInformado = value;
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(2.0)),
+                shape: BoxShape.rectangle,
+              ),
+              child: StreamBuilder<QuerySnapshot>(
+                stream: firestore.collection('diasAtividades').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) return const Text('Carregando...');
+                  return new DropdownButton<String>(
+                    hint: new Text(
+                      _mySelection2,
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    value: _mySelection2,
+                    onChanged: (String newValue) {
+                      this.agendaDiaInformado = newValue;
+                      _mySelection2 = newValue;
+                      return;
+                    },
+                    items: snapshot.data.documents.map((map) {
+                      return new DropdownMenuItem<String>(
+                        value: map["descricao"].toString(),
+                        child: new Text(
+                          map["descricao"],
+                          style: TextStyle(color: Colors.black),
+                          textAlign: TextAlign.center,
+                        ),
+                      );
+                    }).toList(),
+                  );
                 },
               ),
+            ),
+
+            SizedBox(
+              height: 48.0,
             ),
 
             Container(
@@ -206,24 +262,34 @@ class _RegistroAtividadeIndividualScreenState
               ),
             ),
 
+            SizedBox(
+              height: 48.0,
+            ),
+
             Container(
-              child: TextField(
-                style: TextStyle(color: Colors.black.withOpacity(1.0)),
-                decoration: InputDecoration(
-                  enabled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  ),
-                  icon: Icon(
-                    Icons.cloud_done,
-                    color: Colors.black,
-                  ),
-                  hintText: 'Conclusao',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  helperText: 'tipo de conclusao',
-                ),
-                onChanged: (String value) {
-                  this.tipoConclusaoInformado = value;
+              child: StreamBuilder<QuerySnapshot>(
+                stream: firestore.collection('tipoEntrega').snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) return const Text('Carregando...');
+                  return new DropdownButton<String>(
+                    isDense: true,
+                    hint: new Text(
+                      "Selecione o status de entrega",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    value: _mySelection3,
+                    onChanged: (String newValue) {
+                      this.tipoConclusaoInformado = newValue;
+                    },
+                    items: snapshot.data.documents.map((map) {
+                      return new DropdownMenuItem<String>(
+                        value: map["situacao"].toString(),
+                        child: new Text(map["situacao"],
+                            style: TextStyle(color: Colors.black)),
+                      );
+                    }).toList(),
+                  );
                 },
               ),
             ),
@@ -278,6 +344,73 @@ class _RegistroAtividadeIndividualScreenState
           ],
         ),
       ),
+    );
+  }
+}
+
+class CupertinoDessertDialog extends StatelessWidget {
+  const CupertinoDessertDialog({Key key, this.title, this.content})
+      : super(key: key);
+
+  final Widget title;
+  final Widget content;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoAlertDialog(
+      title: title,
+      content: content,
+      actions: <Widget>[
+        CupertinoDialogAction(
+          child: const Text('Cheesecake'),
+          onPressed: () {
+            Navigator.pop(context, 'Cheesecake');
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('Tiramisu'),
+          onPressed: () {
+            Navigator.pop(context, 'Tiramisu');
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('Apple Pie'),
+          onPressed: () {
+            Navigator.pop(context, 'Apple Pie');
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text("Devil's food cake"),
+          onPressed: () {
+            Navigator.pop(context, "Devil's food cake");
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('Banana Split'),
+          onPressed: () {
+            Navigator.pop(context, 'Banana Split');
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('Oatmeal Cookie'),
+          onPressed: () {
+            Navigator.pop(context, 'Oatmeal Cookies');
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('Chocolate Brownie'),
+          onPressed: () {
+            Navigator.pop(context, 'Chocolate Brownies');
+          },
+        ),
+        CupertinoDialogAction(
+          child: const Text('Cancel'),
+          isDestructiveAction: true,
+          onPressed: () {
+            Navigator.pop(context, 'Cancel');
+          },
+        ),
+      ],
     );
   }
 }

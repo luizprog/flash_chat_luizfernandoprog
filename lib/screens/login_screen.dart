@@ -4,6 +4,7 @@ import 'MenuInicial.dart';
 import 'MenuInicialUsuario.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -155,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     minWidth: 200.0,
                     height: 42.0,
                     child: Text(
-                      'Log In',
+                      'Entrar',
                     ),
                   ),
                 ),
