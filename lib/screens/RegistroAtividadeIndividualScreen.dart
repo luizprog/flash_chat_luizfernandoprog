@@ -18,6 +18,7 @@ class _RegistroAtividadeIndividualScreenState
   final _auth = FirebaseAuth.instance;
   final _firestore = Firestore.instance;
   final firestore = Firestore.instance;
+  FirebaseUser loggedInUser;
   var _mySelection;
   var _mySelection2;
   var _mySelection3;
@@ -50,6 +51,20 @@ class _RegistroAtividadeIndividualScreenState
     _dropDownMenuItems = getDropDownMenuItems();
     tipo = _dropDownMenuItems[0].value;
     usuario = _dropDownMenuItems[1].value;
+    getCurrentUser();
+  }
+
+  void getCurrentUser() async {
+    try {
+      final user = await _auth.currentUser();
+      if (user != null) {
+        loggedInUser = user;
+        print(user.email);
+        print('qwertyu');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 
   List<DropdownMenuItem<String>> getDropDownMenuItems() {
@@ -114,42 +129,77 @@ class _RegistroAtividadeIndividualScreenState
             SizedBox(
               height: 48.0,
             ),
-            Container(
-              child: StreamBuilder<QuerySnapshot>(
-                stream: firestore.collection('usuarios').snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) return const Text('Carregando...');
-                  return new DropdownButton<String>(
-                    isDense: true,
-                    hint: new Text(
-                      "Selecione o aluno",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    value: _mySelection,
-                    onChanged: (String newValue) {
-                      this.nomeInformado = newValue;
-                    },
-                    items: snapshot.data.documents.map((map) {
-                      return new DropdownMenuItem<String>(
-                        value: map["usuario"].toString(),
-                        child: new Text(
-                          map["usuario"],
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                },
+            Center(
+              child: Text(
+                "Escolha o aluno",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
               ),
             ),
-
+            SizedBox(
+              height: 8.0,
+            ),
+            Center(
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                    border: Border.all(
+                        style: BorderStyle.solid,
+                        color: Colors.blueAccent,
+                        width: 1.0)),
+                padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
+                child: StreamBuilder<QuerySnapshot>(
+                  stream: firestore.collection('usuarios').snapshots(),
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (!snapshot.hasData) return const Text('Carregando...');
+                    return new DropdownButton<String>(
+                      iconEnabledColor: Colors.black,
+                      iconSize: 30.0,
+                      isExpanded: true,
+                      isDense: true,
+                      hint: new Text(
+                        "Selecione o aluno",
+                        style: TextStyle(color: Colors.black),
+                        textAlign: TextAlign.center,
+                      ),
+                      value: _mySelection,
+                      onChanged: (String newValue) {
+                        setState(() {
+                          this.nomeInformado = newValue;
+                          _mySelection = newValue;
+                        });
+                      },
+                      items: snapshot.data.documents.map((map) {
+                        return new DropdownMenuItem<String>(
+                          value: map["nomeusuario"].toString(),
+                          child: new Text(
+                            map["nomeusuario"],
+                            style: TextStyle(color: Colors.black),
+                            textAlign: TextAlign.center,
+                          ),
+                        );
+                      }).toList(),
+                    );
+                  },
+                ),
+              ),
+            ),
             SizedBox(
               height: 48.0,
             ),
 
             // "Nome do form"
-
+            Center(
+              child: Text(
+                "Nome da atividade",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
             Container(
               child: TextField(
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
@@ -158,10 +208,20 @@ class _RegistroAtividadeIndividualScreenState
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  icon: Icon(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  /*icon: Icon(
                     Icons.featured_play_list,
                     color: Colors.black,
-                  ),
+                  ),*/
                   hintText: 'Procedimento',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   helperText: 'Informe o procedimento atividade',
@@ -172,9 +232,20 @@ class _RegistroAtividadeIndividualScreenState
                 },
               ),
             ),
-
+            SizedBox(
+              height: 48.0,
+            ),
             // "Nome do form"
-
+            Center(
+              child: Text(
+                "Descricao da atividade",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
             Container(
               child: TextField(
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
@@ -183,9 +254,15 @@ class _RegistroAtividadeIndividualScreenState
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  icon: Icon(
-                    Icons.description,
-                    color: Colors.black,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
                   hintText: 'descricao do procedimento',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
@@ -197,37 +274,56 @@ class _RegistroAtividadeIndividualScreenState
                 },
               ),
             ),
-
+            SizedBox(
+              height: 48.0,
+            ),
             // "Nome do form"
 
+            Center(
+              child: Text(
+                "Dias da atividade",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(2.0)),
-                shape: BoxShape.rectangle,
-              ),
+                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  border: Border.all(
+                      style: BorderStyle.solid,
+                      color: Colors.blueAccent,
+                      width: 1.0)),
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestore.collection('diasAtividades').snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) return const Text('Carregando...');
                   return new DropdownButton<String>(
+                    iconEnabledColor: Colors.black,
+                    isDense: true,
+                    isExpanded: true,
                     hint: new Text(
-                      _mySelection2,
+                      "Selecione os dias",
                       style: TextStyle(color: Colors.black),
                     ),
+                    iconSize: 30.0,
                     value: _mySelection2,
                     onChanged: (String newValue) {
-                      this.agendaDiaInformado = newValue;
-                      _mySelection2 = newValue;
-                      return;
+                      setState(() {
+                        this.agendaDiaInformado = newValue;
+                        _mySelection2 = newValue;
+                      });
                     },
                     items: snapshot.data.documents.map((map) {
                       return new DropdownMenuItem<String>(
-                        value: map["descricao"].toString(),
+                        value: map["dias"].toString(),
                         child: new Text(
-                          map["descricao"],
+                          map["dias"],
                           style: TextStyle(color: Colors.black),
-                          textAlign: TextAlign.center,
                         ),
                       );
                     }).toList(),
@@ -240,6 +336,16 @@ class _RegistroAtividadeIndividualScreenState
               height: 48.0,
             ),
 
+            Center(
+              child: Text(
+                "Horario da atividade",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
             Container(
               child: TextField(
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
@@ -248,13 +354,19 @@ class _RegistroAtividadeIndividualScreenState
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  icon: Icon(
-                    Icons.watch_later,
-                    color: Colors.black,
+                  enabledBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 1.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  hintText: 'Hora de fazer a atividade',
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: Colors.blueAccent, width: 2.0),
+                    borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  ),
+                  hintText: 'Hora de fazer as atividades',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                  helperText: 'Hora de fazer a atividade',
+                  helperText: 'Informe a hora que deve ser feito a atividade',
                 ),
                 onChanged: (String value) {
                   this.agendaHoraInformado = value;
@@ -266,13 +378,33 @@ class _RegistroAtividadeIndividualScreenState
               height: 48.0,
             ),
 
+            Center(
+              child: Text(
+                "Status",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
+              ),
+            ),
+            SizedBox(
+              height: 8.0,
+            ),
             Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
+                  border: Border.all(
+                      style: BorderStyle.solid,
+                      color: Colors.blueAccent,
+                      width: 1.0)),
+              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
               child: StreamBuilder<QuerySnapshot>(
                 stream: firestore.collection('tipoEntrega').snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) return const Text('Carregando...');
                   return new DropdownButton<String>(
+                    iconEnabledColor: Colors.black,
+                    iconSize: 30.0,
+                    isExpanded: true,
                     isDense: true,
                     hint: new Text(
                       "Selecione o status de entrega",
@@ -280,7 +412,10 @@ class _RegistroAtividadeIndividualScreenState
                     ),
                     value: _mySelection3,
                     onChanged: (String newValue) {
-                      this.tipoConclusaoInformado = newValue;
+                      setState(() {
+                        this.tipoConclusaoInformado = newValue;
+                        _mySelection3 = newValue;
+                      });
                     },
                     items: snapshot.data.documents.map((map) {
                       return new DropdownMenuItem<String>(
@@ -296,7 +431,7 @@ class _RegistroAtividadeIndividualScreenState
 
             //button save
             SizedBox(
-              height: 48.0,
+              height: 64.0,
             ),
             Container(
               child: Material(
@@ -318,7 +453,7 @@ class _RegistroAtividadeIndividualScreenState
                         'agendadia': agendaDiaInformado,
                         'agendahora': agendaHoraInformado,
                         'dataDaInclusao': DateTime.now(),
-                        'instrutor': usuario,
+                        'instrutor': loggedInUser.email.toString(),
                       });
 
                       setState(() {
@@ -344,73 +479,6 @@ class _RegistroAtividadeIndividualScreenState
           ],
         ),
       ),
-    );
-  }
-}
-
-class CupertinoDessertDialog extends StatelessWidget {
-  const CupertinoDessertDialog({Key key, this.title, this.content})
-      : super(key: key);
-
-  final Widget title;
-  final Widget content;
-
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoAlertDialog(
-      title: title,
-      content: content,
-      actions: <Widget>[
-        CupertinoDialogAction(
-          child: const Text('Cheesecake'),
-          onPressed: () {
-            Navigator.pop(context, 'Cheesecake');
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text('Tiramisu'),
-          onPressed: () {
-            Navigator.pop(context, 'Tiramisu');
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text('Apple Pie'),
-          onPressed: () {
-            Navigator.pop(context, 'Apple Pie');
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text("Devil's food cake"),
-          onPressed: () {
-            Navigator.pop(context, "Devil's food cake");
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text('Banana Split'),
-          onPressed: () {
-            Navigator.pop(context, 'Banana Split');
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text('Oatmeal Cookie'),
-          onPressed: () {
-            Navigator.pop(context, 'Oatmeal Cookies');
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text('Chocolate Brownie'),
-          onPressed: () {
-            Navigator.pop(context, 'Chocolate Brownies');
-          },
-        ),
-        CupertinoDialogAction(
-          child: const Text('Cancel'),
-          isDestructiveAction: true,
-          onPressed: () {
-            Navigator.pop(context, 'Cancel');
-          },
-        ),
-      ],
     );
   }
 }

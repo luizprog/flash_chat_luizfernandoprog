@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'registration_screen.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MenuInicialUsuarioScreen extends StatefulWidget {
   @override
@@ -18,6 +21,11 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
   String usuario;
   FirebaseUser loggedInUser;
   String messageText;
+
+  static final double myTextSize = 20.0;
+  final double myIconSize = 20.0;
+  final TextStyle myTextStyle =
+      new TextStyle(color: Colors.black, fontSize: myTextSize);
 
   @override
   void initState() {
@@ -42,68 +50,70 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.playlist_play),
-
-            //onPressed: ,
-          ),
-          IconButton(
-            icon: Icon(Icons.playlist_add),
-            tooltip: '.....',
-            //onPressed: _restitchDress,
-          ),
-          IconButton(
-            icon: Icon(Icons.playlist_add_check),
-          ),
-        ],
+        centerTitle: true,
+        title: Text('App - Aluno'),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(
         inAsyncCall: showSpinner,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              SizedBox(
-                height: 48.0,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(vertical: 16.0),
-                child: Material(
-                  color: Colors.lightBlueAccent,
-                  borderRadius: BorderRadius.circular(30.0),
-                  elevation: 5.0,
-                  child: MaterialButton(
-                    onPressed: () {
-                      {
-                        setState(() {
-                          showSpinner = true;
-                        });
+          child: StreamBuilder(
+            stream: Firestore.instance
+                .collection('procedimento')
+                .where('usuario', isEqualTo: loggedInUser.email.toString())
+                .snapshots(),
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (!snapshot.hasData) return new Text('Loading...');
+              return new Column(
+                mainAxisSize: MainAxisSize.max,
+                verticalDirection: VerticalDirection.down,
+                children: snapshot.data.documents.map((document) {
+                  return new Column(
+                    children: <Widget>[
+                      new MyCard(
+                          title: new Text(
+                            document['procedimento'],
+                            style: myTextStyle,
+                          ),
+                          icon: new Icon(Icons.done,
+                              size: myIconSize, color: Colors.deepOrange)),
+                    ],
+                  ); //ListTile
+                }).toList(),
+              ); //ListView
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
-                        try {
-                          //Navigator.pushNamed(context, RegistrationScreen.ID);
-                          //setState(() {
-                          //  showSpinner = false;
-                          //});
-                          print("qwe,mn");
-                        } catch (e) {
-                          //print("Erro");
-                          print(e);
-                        }
-                      }
-                    },
-                    minWidth: 200.0,
-                    height: 42.0,
-                    child: Text(
-                      'Tarefas',
-                    ),
-                  ),
-                ),
-              ),
-            ],
+  getModal() {
+    print("Chamou a funcao");
+  }
+}
+
+class MyCard extends StatelessWidget {
+  final Widget icon;
+  final Widget title;
+
+  // Constructor. {} here denote that they are optional values i.e you can use as: new MyCard()
+  MyCard({this.title, this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return new Container(
+      padding: const EdgeInsets.all(5.0),
+      child: new Card(
+        color: Colors.white70,
+        child: new Container(
+          padding: const EdgeInsets.all(10.0),
+          child: new Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            textDirection: TextDirection.ltr,
+            children: <Widget>[this.title, this.icon],
           ),
         ),
       ),

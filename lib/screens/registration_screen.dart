@@ -133,51 +133,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
               /**/
 
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                      color: Colors.blueAccent,
-                      style: BorderStyle.solid,
-                      width: 1.0),
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                ),
-                child: DropdownButtonFormField(
-                  decoration: InputDecoration(
-                    hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.blueAccent, width: 1.0),
-                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: Colors.blueAccent, width: 2.0),
-                      borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                    ),
-                  ),
-
-                  value: _currentCity,
-                  /*isExpanded: true,
-
-                  iconDisabledColor: Colors.green,
-                  icon: Icon(Icons.arrow_drop_down_circle),
-                  iconEnabledColor: Colors.blueAccent,
-                  style: TextStyle(
-                    color: Colors.black.withOpacity(0.5),
-                  ),*/
-
-                  items: _dropDownMenuItems,
-                  onChanged: changedDropDownItem,
-                  //items: _dropDownMenuItems,
-                  //onChanged: changedDropDownItem,
-                ),
-              ),
               SizedBox(
                 height: 24.0,
               ),
