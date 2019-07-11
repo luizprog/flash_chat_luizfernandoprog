@@ -38,8 +38,6 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
-        print(user.email);
-        print('qwertyu');
       }
     } catch (e) {
       print(e);
@@ -61,7 +59,7 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
           child: StreamBuilder(
             stream: Firestore.instance
                 .collection('procedimento')
-                .where('usuario', isEqualTo: loggedInUser.email.toString())
+                .where('usuario', isEqualTo: this.loggedInUser.email.toString())
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -70,17 +68,40 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
                 mainAxisSize: MainAxisSize.max,
                 verticalDirection: VerticalDirection.down,
                 children: snapshot.data.documents.map((document) {
-                  return new Column(
-                    children: <Widget>[
-                      new MyCard(
+                  print(document['conclusao'].toString());
+                  if (document['conclusao'] == "sucesso") {
+                    return new Column(
+                      children: <Widget>[
+                        new MyCard(
                           title: new Text(
                             document['procedimento'],
                             style: myTextStyle,
                           ),
-                          icon: new Icon(Icons.done,
-                              size: myIconSize, color: Colors.deepOrange)),
-                    ],
-                  ); //ListTile
+                          icon: new Icon(
+                            Icons.done,
+                            size: myIconSize,
+                            color: Colors.green,
+                          ),
+                        ),
+                      ],
+                    ); //Column
+                  } else {
+                    return new Column(
+                      children: <Widget>[
+                        new MyCard(
+                          title: new Text(
+                            document['procedimento'],
+                            style: myTextStyle,
+                          ),
+                          icon: new Icon(
+                            Icons.done,
+                            size: myIconSize,
+                            color: Colors.deepOrangeAccent,
+                          ),
+                        ),
+                      ],
+                    ); //Column
+                  }
                 }).toList(),
               ); //ListView
             },

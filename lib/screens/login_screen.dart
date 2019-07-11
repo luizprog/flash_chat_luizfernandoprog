@@ -18,6 +18,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final _firestore = Firestore.instance;
   bool showSpinner = false;
   String usuario;
+  String usuarioEmail;
   String senha;
   String permissao;
 
@@ -25,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final permissao = await _firestore.collection('usuarios').getDocuments();
 
     for (var usuariosLogado in permissao.documents) {
-      if (usuariosLogado.data['usuario'].toString() == usuario) {
+      if (usuariosLogado.data['usuario'].toString() == usuarioEmail) {
         if (usuariosLogado.data['nivelDeAcesso'] == 'administrador') {
           Navigator.pushNamed(context, MenuInicialScreen.ID);
         } else {
@@ -33,6 +34,19 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       }
     }
+  }
+
+  void getUsuarioEmail() async {
+    final loginUserName =
+        await _firestore.collection('usuarios').getDocuments();
+    for (var usuariosLogado in loginUserName.documents) {
+      if (usuariosLogado.data['nomeusuario'].toString() == usuario) {
+        usuarioEmail = usuariosLogado.data['usuario'].toString();
+      }
+    }
+
+    final newUser = await _auth.signInWithEmailAndPassword(
+        email: usuarioEmail, password: senha);
   }
 
   /* getSnapshot Stream message
@@ -135,19 +149,21 @@ class _LoginScreenState extends State<LoginScreen> {
                   elevation: 5.0,
                   child: MaterialButton(
                     onPressed: () async {
+                      try {
+                        getUsuarioEmail();
+                      } catch (e) {
+                        print("Erro");
+                        print(e);
+                      }
+                      getUsuarioPermisssao();
                       setState(() {
                         showSpinner = true;
                       });
 
                       try {
-                        final newUser = await _auth.signInWithEmailAndPassword(
-                            email: usuario, password: senha);
-
                         setState(() {
                           showSpinner = false;
                         });
-
-                        getUsuarioPermisssao();
                       } catch (e) {
                         print("Erro");
                         print(e);

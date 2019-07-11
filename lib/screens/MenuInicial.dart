@@ -22,7 +22,7 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
   FirebaseUser loggedInUser;
   String messageText;
 
-  static final double myTextSize = 10.0;
+  static final double myTextSize = 20.0;
   final double myIconSize = 20.0;
   final TextStyle myTextStyle =
       new TextStyle(color: Colors.black, fontSize: myTextSize);
@@ -82,27 +82,48 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) return new Text('Loading...');
+
               return new Column(
                 mainAxisSize: MainAxisSize.max,
                 verticalDirection: VerticalDirection.down,
                 children: snapshot.data.documents.map((document) {
-                  return new Column(
-                    children: <Widget>[
-                      new MyCard(
-                          title: new Text(
-                            document['procedimento'],
-                            style: myTextStyle,
-                          ),
-                          icon: new Icon(Icons.done,
-                              size: myIconSize, color: Colors.deepOrange)),
-                    ],
-                    //title: new Text(document['procedimento']),
-                    //subtitle: new Text(document['descricao']),
-                    //dense: true,
-                    //enabled: true,
-                    //contentPadding:EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
-                    //isThreeLine: true,
-                  ); //ListTile
+                  if (document['conclusao'] == "sucesso") {
+                    return new Column(
+                      children: <Widget>[
+                        new MyCard(
+                            title: new Text(
+                              document['procedimento'],
+                              style: myTextStyle,
+                            ),
+                            icon: new Icon(Icons.done,
+                                size: myIconSize, color: Colors.green)),
+                      ],
+                      //title: new Text(document['procedimento']),
+                      //subtitle: new Text(document['descricao']),
+                      //dense: true,
+                      //enabled: true,
+                      //contentPadding:EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                      //isThreeLine: true,
+                    ); //ListTile
+                  } else {
+                    return new Column(
+                      children: <Widget>[
+                        new MyCard(
+                            title: new Text(
+                              document['procedimento'],
+                              style: myTextStyle,
+                            ),
+                            icon: new Icon(Icons.done,
+                                size: myIconSize, color: Colors.redAccent)),
+                      ],
+                      //title: new Text(document['procedimento']),
+                      //subtitle: new Text(document['descricao']),
+                      //dense: true,
+                      //enabled: true,
+                      //contentPadding:EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                      //isThreeLine: true,
+                    ); //ListTile
+                  }
                 }).toList(),
               ); //ListView
             },
@@ -157,11 +178,11 @@ class MyCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Container(
-      padding: const EdgeInsets.all(5.0),
+      padding: const EdgeInsets.all(2.0),
       child: new Card(
         color: Colors.white70,
         child: new Container(
-          padding: const EdgeInsets.all(10.0),
+          padding: const EdgeInsets.all(20.0),
           child: new Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
