@@ -77,7 +77,7 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
           child: StreamBuilder(
             stream: Firestore.instance
                 .collection('procedimento')
-                .where('instrutor', isEqualTo: loggedInUser.email.toString())
+                //.where('instrutor', isEqualTo: loggedInUser.email)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

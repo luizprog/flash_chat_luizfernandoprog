@@ -1,5 +1,5 @@
-name: flash_chat
-description: A new Flutter application.
+name: AutiApp
+description: Aplicativo para atendimento de alunos.
 
 version: 1.0.0+1
 
@@ -26,3 +26,4 @@ flutter:
 
   assets:
   - images/
+

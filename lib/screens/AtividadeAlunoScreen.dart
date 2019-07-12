@@ -277,64 +277,6 @@ class _RegistroAtividadeIndividualScreenState
             SizedBox(
               height: 48.0,
             ),
-            // "Nome do form"
-
-            Center(
-              child: Text(
-                "Dias da atividade",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0),
-              ),
-            ),
-            SizedBox(
-              height: 8.0,
-            ),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(32.0)),
-                  border: Border.all(
-                      style: BorderStyle.solid,
-                      color: Colors.blueAccent,
-                      width: 1.0)),
-              padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
-              child: StreamBuilder<QuerySnapshot>(
-                stream: firestore.collection('diasAtividades').snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) return const Text('Carregando...');
-                  return new DropdownButton<String>(
-                    iconEnabledColor: Colors.black,
-                    isDense: true,
-                    isExpanded: true,
-                    hint: new Text(
-                      "Selecione os dias",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    iconSize: 30.0,
-                    value: _mySelection2,
-                    onChanged: (String newValue) {
-                      setState(() {
-                        this.agendaDiaInformado = newValue;
-                        _mySelection2 = newValue;
-                      });
-                    },
-                    items: snapshot.data.documents.map((map) {
-                      return new DropdownMenuItem<String>(
-                        value: map["dias"].toString(),
-                        child: new Text(
-                          map["dias"],
-                          style: TextStyle(color: Colors.blueAccent),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-            ),
-
-            SizedBox(
-              height: 48.0,
-            ),
 
             Center(
               child: Text(
@@ -364,7 +306,7 @@ class _RegistroAtividadeIndividualScreenState
                         BorderSide(color: Colors.blueAccent, width: 2.0),
                     borderRadius: BorderRadius.all(Radius.circular(32.0)),
                   ),
-                  hintText: 'Hora de fazer as atividades',
+                  hintText: 'Concluido em quantos minutos?',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   helperText: 'Informe a hora que deve ser feito a atividade',
                 ),
@@ -468,7 +410,7 @@ class _RegistroAtividadeIndividualScreenState
                   minWidth: 200.0,
                   height: 42.0,
                   child: Text(
-                    'Salvar',
+                    'Entregar atividade',
                   ),
                 ),
               ),
