@@ -6,11 +6,12 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'RegistroAtividadeIndividualScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'AlunoAtividade.dart';
 
 class MenuInicialScreen extends StatefulWidget {
   @override
   static String ID = 'MenuInicial_screen';
-
+  static String usuarioSelecionado;
   _MenuInicialScreenState createState() => _MenuInicialScreenState();
 }
 
@@ -62,6 +63,11 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
     }
   }
 
+  void goToAlunoAtividadesMain(String nomeUsuarioAluno) {
+    MenuInicialScreen.usuarioSelecionado = nomeUsuarioAluno;
+    Navigator.pushNamed(context, AlunoAtividadeScreen.ID);
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -76,7 +82,7 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
           padding: EdgeInsets.symmetric(horizontal: 24.0),
           child: StreamBuilder(
             stream: Firestore.instance
-                .collection('procedimento')
+                .collection('usuarios')
                 //.where('instrutor', isEqualTo: loggedInUser.email)
                 .snapshots(),
             builder:
@@ -87,43 +93,28 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
                 mainAxisSize: MainAxisSize.max,
                 verticalDirection: VerticalDirection.down,
                 children: snapshot.data.documents.map((document) {
-                  if (document['conclusao'] == "sucesso") {
-                    return new Column(
-                      children: <Widget>[
-                        new MyCard(
-                            title: new Text(
-                              document['procedimento'],
-                              style: myTextStyle,
-                            ),
-                            icon: new Icon(Icons.done,
-                                size: myIconSize, color: Colors.green)),
-                      ],
-                      //title: new Text(document['procedimento']),
-                      //subtitle: new Text(document['descricao']),
-                      //dense: true,
-                      //enabled: true,
-                      //contentPadding:EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
-                      //isThreeLine: true,
-                    ); //ListTile
-                  } else {
-                    return new Column(
-                      children: <Widget>[
-                        new MyCard(
-                            title: new Text(
-                              document['procedimento'],
-                              style: myTextStyle,
-                            ),
-                            icon: new Icon(Icons.done,
-                                size: myIconSize, color: Colors.redAccent)),
-                      ],
-                      //title: new Text(document['procedimento']),
-                      //subtitle: new Text(document['descricao']),
-                      //dense: true,
-                      //enabled: true,
-                      //contentPadding:EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
-                      //isThreeLine: true,
-                    ); //ListTile
-                  }
+                  return new Container(
+                    padding: const EdgeInsets.all(5.0),
+                    width: 680,
+                    child: Card(
+                      child: MaterialButton(
+                        onPressed: () {
+                          goToAlunoAtividadesMain(document['usuario']);
+                        },
+                        child: Text(
+                          document['nomeusuario'],
+                          style: myTextStyle,
+                        ),
+                      ),
+                      color: Colors.white70,
+                    ),
+                  );
+                  //title: new Text(document['procedimento']),
+                  //subtitle: new Text(document['descricao']),
+                  //dense: true,
+                  //enabled: true,
+                  //contentPadding:EdgeInsets.symmetric(vertical: 2.0, horizontal: 2.0),
+                  //isThreeLine: true,
                 }).toList(),
               ); //ListView
             },

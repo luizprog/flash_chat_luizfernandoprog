@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'chat_screen.dart';
-import 'MenuInicialUsuario.dart';
+import 'MenuInicial.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -20,6 +20,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   String nomeusuario;
   String senha;
   String tipo;
+
+  String novoCadastroEmail;
+  String novoCadastroUsuario;
+  String novoCadastroSenha;
 
   List _cities = ['administrador', 'comum'];
 
@@ -77,7 +81,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
-                  nomeusuario = value;
+                  novoCadastroUsuario = value;
                 },
                 decoration: InputDecoration(
                   hintText: 'Nome de usuario',
@@ -106,7 +110,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 style: TextStyle(color: Colors.black.withOpacity(1.0)),
                 textAlign: TextAlign.center,
                 onChanged: (value) {
-                  usuario = value;
+                  novoCadastroEmail = value;
                 },
                 decoration: InputDecoration(
                   hintText: 'Entre com o email',
@@ -136,7 +140,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 obscureText: true,
                 textAlign: TextAlign.center,
                 onChanged: (value) {
-                  senha = value;
+                  novoCadastroSenha = value;
                 },
                 decoration: InputDecoration(
                   hintText: 'Entre com a senha',
@@ -184,17 +188,17 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                       try {
                         final newUser =
                             await _auth.createUserWithEmailAndPassword(
-                                email: usuario, password: senha);
+                                email: novoCadastroEmail,
+                                password: novoCadastroSenha);
 
                         _firestore.collection('usuarios').add({
                           'nivelDeAcesso': _currentCity,
-                          'usuario': usuario,
-                          'nomeusuario': nomeusuario,
+                          'usuario': novoCadastroEmail,
+                          'nomeusuario': novoCadastroUsuario,
                         });
 
                         if (newUser != null) {
-                          Navigator.pushNamed(
-                              context, MenuInicialUsuarioScreen.ID);
+                          Navigator.pushNamed(context, MenuInicialScreen.ID);
                         }
                         setState(() {
                           showSpinner = false;

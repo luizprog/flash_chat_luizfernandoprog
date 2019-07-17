@@ -1,11 +1,12 @@
+import 'package:AutiApp/screens/AlunoAtividade.dart';
 import 'package:flutter/material.dart';
-import 'package:flash_chat/screens/welcome_screen.dart';
-import 'package:flash_chat/screens/login_screen.dart';
-import 'package:flash_chat/screens/registration_screen.dart';
-import 'package:flash_chat/screens/chat_screen.dart';
-import 'package:flash_chat/screens/MenuInicial.dart';
-import 'package:flash_chat/screens/MenuInicialUsuario.dart';
-import 'package:flash_chat/screens/RegistroAtividadeIndividualScreen.dart';
+import 'package:AutiApp/screens/welcome_screen.dart';
+import 'package:AutiApp/screens/login_screen.dart';
+import 'package:AutiApp/screens/registration_screen.dart';
+import 'package:AutiApp/screens/chat_screen.dart';
+import 'package:AutiApp/screens/MenuInicial.dart';
+import 'package:AutiApp/screens/MenuInicialUsuario.dart';
+import 'package:AutiApp/screens/RegistroAtividadeIndividualScreen.dart';
 
 void main() => runApp(FlashChat());
 
@@ -28,6 +29,7 @@ class FlashChat extends StatelessWidget {
         MenuInicialUsuarioScreen.ID: (context) => MenuInicialUsuarioScreen(),
         RegistroAtividadeIndividualScreen.ID: (context) =>
             RegistroAtividadeIndividualScreen(),
+        AlunoAtividadeScreen.ID: (context) => AlunoAtividadeScreen(),
       },
     );
   }
