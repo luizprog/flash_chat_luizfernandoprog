@@ -73,7 +73,7 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
         centerTitle: true,
-        title: Text('Auti app - Cuidador'),
+        title: Text('Desenvolver'),
       ),
       backgroundColor: Colors.white,
       body: ModalProgressHUD(

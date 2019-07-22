@@ -88,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   usuario = value;
                 },
                 decoration: InputDecoration(
-                  hintText: 'Enter your email',
+                  hintText: 'Entre com o usuario',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 decoration: InputDecoration(
                   fillColor: Colors.black,
-                  hintText: 'Enter your password.',
+                  hintText: 'Entre com a senha',
                   hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),

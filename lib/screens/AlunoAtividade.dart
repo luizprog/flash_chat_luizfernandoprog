@@ -65,7 +65,9 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return new Text("Nenhuma atividade encontrada!");
+                return new Center(
+                  child: CircularProgressIndicator(),
+                );
               }
               if (snapshot.hasData) {
                 return new Column(
@@ -74,36 +76,48 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                   children: snapshot.data.documents.map((document) {
                     print(document['conclusao'].toString());
                     if (document['conclusao'] == "sucesso") {
-                      return new Column(
-                        children: <Widget>[
-                          new MyCard(
-                            title: new Text(
-                              document['procedimento'],
-                              style: myTextStyle,
+                      return new FlatButton(
+                        child: Column(
+                          children: <Widget>[
+                            new MyCard(
+                              title: new Text(
+                                document['procedimento'],
+                                style: myTextStyle,
+                              ),
+                              icon: new Icon(
+                                Icons.done,
+                                size: myIconSize,
+                                color: Colors.deepOrangeAccent,
+                              ),
                             ),
-                            icon: new Icon(
-                              Icons.done,
-                              size: myIconSize,
-                              color: Colors.green,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        onPressed: () {
+                          print(document['procedimento']);
+                          print(document['usuario']);
+                        },
                       ); //Column
                     } else {
-                      return new Column(
-                        children: <Widget>[
-                          new MyCard(
-                            title: new Text(
-                              document['procedimento'],
-                              style: myTextStyle,
+                      return new FlatButton(
+                        child: Column(
+                          children: <Widget>[
+                            new MyCard(
+                              title: new Text(
+                                document['procedimento'],
+                                style: myTextStyle,
+                              ),
+                              icon: new Icon(
+                                Icons.done,
+                                size: myIconSize,
+                                color: Colors.deepOrangeAccent,
+                              ),
                             ),
-                            icon: new Icon(
-                              Icons.done,
-                              size: myIconSize,
-                              color: Colors.deepOrangeAccent,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        onPressed: () {
+                          print(document['procedimento']);
+                          print(document['usuario']);
+                        },
                       ); //Column
                     }
                   }).toList(),

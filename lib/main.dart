@@ -1,12 +1,12 @@
-import 'package:AutiApp/screens/AlunoAtividade.dart';
+import 'package:Desenvolver/screens/AlunoAtividade.dart';
 import 'package:flutter/material.dart';
-import 'package:AutiApp/screens/welcome_screen.dart';
-import 'package:AutiApp/screens/login_screen.dart';
-import 'package:AutiApp/screens/registration_screen.dart';
-import 'package:AutiApp/screens/chat_screen.dart';
-import 'package:AutiApp/screens/MenuInicial.dart';
-import 'package:AutiApp/screens/MenuInicialUsuario.dart';
-import 'package:AutiApp/screens/RegistroAtividadeIndividualScreen.dart';
+import 'package:Desenvolver/screens/welcome_screen.dart';
+import 'package:Desenvolver/screens/login_screen.dart';
+import 'package:Desenvolver/screens/registration_screen.dart';
+import 'package:Desenvolver/screens/chat_screen.dart';
+import 'package:Desenvolver/screens/MenuInicial.dart';
+import 'package:Desenvolver/screens/MenuInicialUsuario.dart';
+import 'package:Desenvolver/screens/RegistroAtividadeIndividualScreen.dart';
 
 void main() => runApp(FlashChat());
 
