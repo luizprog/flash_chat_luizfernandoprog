@@ -107,7 +107,7 @@ class _RegistroAtividadeIndividualScreenState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
-        title: Text('Auti app - Cuidador'),
+        title: Text('Desenvolver'),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

@@ -1,3 +1,4 @@
+import 'package:Desenvolver/screens/DialogAtividade.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -22,6 +23,9 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
   String messageText;
   bool TemDados;
 
+  String usuarioSelecionado;
+  String atividadeSelecionada;
+
   static final double myTextSize = 20.0;
   final double myIconSize = 20.0;
   final TextStyle myTextStyle =
@@ -42,6 +46,25 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
     } catch (e) {
       print(e);
     }
+  }
+
+
+  void _openAddEntryDialog() {
+
+  String usuarioSelecionado;
+  String atividadeSelecionada;
+    Firestore.instance.collection('procedimento').where('usuario', isEqualTo: usuarioSelecionado.toString()).where('procedimento', isEqualTo: atividadeSelecionada.toString())
+    .snapshots().listen(
+          (data) => print('grower ${data.documents[0]['name']}')
+    );
+    /*
+    Navigator.of(context).push(new MaterialPageRoute<Null>(
+        builder: (BuildContext context) {
+          return new DialogAtividade();
+        },
+      fullscreenDialog: true
+    ));
+    */
   }
 
   Widget build(BuildContext context) {
@@ -93,8 +116,13 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                           ],
                         ),
                         onPressed: () {
+                          /*
                           print(document['procedimento']);
                           print(document['usuario']);
+                          */
+                          usuarioSelecionado = document['usuario'];
+                          atividadeSelecionada = document['procedimento'];
+                          _openAddEntryDialog();
                         },
                       ); //Column
                     } else {
@@ -115,8 +143,12 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                           ],
                         ),
                         onPressed: () {
+                          /*
                           print(document['procedimento']);
-                          print(document['usuario']);
+                          print(document['usuario']);*/
+                          usuarioSelecionado = document['usuario'];
+                          atividadeSelecionada = document['procedimento'];
+                          _openAddEntryDialog();
                         },
                       ); //Column
                     }
@@ -160,3 +192,4 @@ class MyCard extends StatelessWidget {
     );
   }
 }
+
