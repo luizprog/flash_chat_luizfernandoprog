@@ -2,10 +2,10 @@ import 'package:Desenvolver/screens/DialogAtividade.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'registration_screen.dart';
 import 'MenuInicial.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AlunoAtividadeScreen extends StatefulWidget {
   @override
@@ -25,6 +25,9 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
 
   String usuarioSelecionado;
   String atividadeSelecionada;
+  String agendadiaSelecionada;
+  String agendahoraSelecionada;
+  String descricaoSelecionada;
 
   static final double myTextSize = 20.0;
   final double myIconSize = 20.0;
@@ -48,23 +51,109 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
     }
   }
 
-
   void _openAddEntryDialog() {
-
-  String usuarioSelecionado;
-  String atividadeSelecionada;
-    Firestore.instance.collection('procedimento').where('usuario', isEqualTo: usuarioSelecionado.toString()).where('procedimento', isEqualTo: atividadeSelecionada.toString())
-    .snapshots().listen(
-          (data) => print('grower ${data.documents[0]['name']}')
-    );
-    /*
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
-          return new DialogAtividade();
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.lightBlueAccent,
+              centerTitle: true,
+              title: Text('Atividades'),
+            ),
+            backgroundColor: Colors.white,
+            body: ModalProgressHUD(
+              inAsyncCall: showSpinner,
+              child: Container(
+                child: new Container(
+                  child: Column(
+                    children: <Widget>[
+                      new MyCard(
+                        title: new Text(
+                          usuarioSelecionado,
+                          style: myTextStyle,
+                        ),
+                        icon: new Icon(
+                          Icons.done,
+                          //size: myIconSize,
+                          //color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                      new MyCard(
+                        title: new Text(
+                          atividadeSelecionada,
+                          style: myTextStyle,
+                        ),
+                        icon: new Icon(
+                          Icons.done,
+                          //size: myIconSize,
+                          //color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                      new MyCard(
+                        title: new Text(
+                          agendadiaSelecionada,
+                          style: myTextStyle,
+                        ),
+                        icon: new Icon(
+                          Icons.done,
+                          //size: myIconSize,
+                          //color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                      new MyCard(
+                        title: new Text(
+                          agendahoraSelecionada,
+                          style: myTextStyle,
+                        ),
+                        icon: new Icon(
+                          Icons.done,
+                          //size: myIconSize,
+                          //color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                      new MyCard(
+                        title: new Text(
+                          descricaoSelecionada,
+                          style: myTextStyle,
+                        ),
+                        icon: new Icon(
+                          Icons.done,
+                          //size: myIconSize,
+                          //color: Colors.deepOrangeAccent,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            bottomSheet: Text("Tipo de ajuda:"),
+            persistentFooterButtons: <Widget>[
+              FlatButton.icon(
+                  onPressed: null,
+                  icon: Icon(
+                    Icons.thumb_down,
+                    color: Colors.deepOrangeAccent,
+                  ),
+                  label: Text("Total")),
+              FlatButton.icon(
+                  onPressed: null,
+                  icon: Icon(
+                    Icons.thumbs_up_down,
+                    color: Colors.lightBlueAccent,
+                  ),
+                  label: Text("Parcial")),
+              FlatButton.icon(
+                  onPressed: null,
+                  icon: Icon(
+                    Icons.thumb_up,
+                    color: Colors.green,
+                  ),
+                  label: Text("Sucesso")),
+            ],
+          );
         },
-      fullscreenDialog: true
-    ));
-    */
+        fullscreenDialog: true));
   }
 
   Widget build(BuildContext context) {
@@ -122,6 +211,10 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                           */
                           usuarioSelecionado = document['usuario'];
                           atividadeSelecionada = document['procedimento'];
+                          agendadiaSelecionada = document['agendadia'];
+                          agendahoraSelecionada = document['agendahora'];
+                          descricaoSelecionada = document['descricao'];
+
                           _openAddEntryDialog();
                         },
                       ); //Column
@@ -143,11 +236,11 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                           ],
                         ),
                         onPressed: () {
-                          /*
-                          print(document['procedimento']);
-                          print(document['usuario']);*/
                           usuarioSelecionado = document['usuario'];
                           atividadeSelecionada = document['procedimento'];
+                          agendadiaSelecionada = document['agendadia'];
+                          agendahoraSelecionada = document['agendahora'];
+                          descricaoSelecionada = document['descricao'];
                           _openAddEntryDialog();
                         },
                       ); //Column
@@ -192,4 +285,3 @@ class MyCard extends StatelessWidget {
     );
   }
 }
-

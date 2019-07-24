@@ -136,19 +136,21 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
               backgroundColor: Colors.blue,
               label: 'Novo aluno',
               //labelStyle: TextTheme(fontSize: 18.0),
+              labelStyle: TextStyle(color: Colors.black.withOpacity(0.5)),
               onTap: () => gotoRegistration()),
           SpeedDialChild(
             child: Icon(Icons.person_add),
             backgroundColor: Colors.green,
             label: 'Nova atividade',
             //labelStyle: TextTheme(fontSize: 18.0),
+            labelStyle: TextStyle(color: Colors.black.withOpacity(0.5)),
             onTap: () => Navigator.pushNamed(
                 context, RegistroAtividadeIndividualScreen.ID),
           ),
           SpeedDialChild(
             child: Icon(Icons.group_add),
             backgroundColor: Colors.lightGreen,
-            labelStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
+            labelStyle: TextStyle(color: Colors.black.withOpacity(0.5)),
             label: 'Nova atividade compartilhada',
             //labelStyle: TextTheme(fontSize: 18.0),
             onTap: () => print('THIRD CHILD'),

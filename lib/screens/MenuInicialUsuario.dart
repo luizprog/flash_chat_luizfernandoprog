@@ -21,7 +21,7 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
   String usuario;
   FirebaseUser loggedInUser;
   String messageText;
-
+  static String usuarioSelecionado;
   static final double myTextSize = 20.0;
   final double myIconSize = 20.0;
   final TextStyle myTextStyle =
@@ -38,6 +38,7 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
       final user = await _auth.currentUser();
       if (user != null) {
         loggedInUser = user;
+        usuarioSelecionado = user.email;
       }
     } catch (e) {
       print(e);
@@ -59,7 +60,7 @@ class _MenuInicialUsuarioScreenState extends State<MenuInicialUsuarioScreen> {
           child: StreamBuilder(
             stream: Firestore.instance
                 .collection('procedimento')
-                .where('usuario', isEqualTo: this.loggedInUser.email.toString())
+                .where('usuario', isEqualTo: this.loggedInUser.email)
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {

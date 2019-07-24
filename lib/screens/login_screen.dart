@@ -74,9 +74,11 @@ class _LoginScreenState extends State<LoginScreen> {
               Hero(
                 tag: 'logo',
                 child: Container(
-                  height: 200.0,
+                  height: 100.0,
+                  width: 60.0,
                   child: Image.asset('images/auti.png'),
                 ),
+                transitionOnUserGestures: true,
               ),
               SizedBox(
                 height: 48.0,
@@ -89,7 +91,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 },
                 decoration: InputDecoration(
                   hintText: 'Entre com o usuario',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
+                  hintStyle: TextStyle(color: Colors.black.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
@@ -120,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   fillColor: Colors.black,
                   hintText: 'Entre com a senha',
-                  hintStyle: TextStyle(color: Colors.grey.withOpacity(0.5)),
+                  hintStyle: TextStyle(color: Colors.black.withOpacity(0.5)),
                   contentPadding:
                       EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),
                   border: OutlineInputBorder(
