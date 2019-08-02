@@ -12,6 +12,7 @@ class MenuInicialScreen extends StatefulWidget {
   @override
   static String ID = 'MenuInicial_screen';
   static String usuarioSelecionado;
+  static String nomeUsuarioSelecionado;
   _MenuInicialScreenState createState() => _MenuInicialScreenState();
 }
 
@@ -63,8 +64,10 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
     }
   }
 
-  void goToAlunoAtividadesMain(String nomeUsuarioAluno) {
-    MenuInicialScreen.usuarioSelecionado = nomeUsuarioAluno;
+  void goToAlunoAtividadesMain(
+      String emailUsuarioSelecionado, String nomeUsuarioSelecionado) {
+    MenuInicialScreen.usuarioSelecionado = emailUsuarioSelecionado;
+    MenuInicialScreen.nomeUsuarioSelecionado = nomeUsuarioSelecionado;
     Navigator.pushNamed(context, AlunoAtividadeScreen.ID);
   }
 
@@ -83,6 +86,7 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
           child: StreamBuilder(
             stream: Firestore.instance
                 .collection('usuarios')
+                .where("nivelDeAcesso", isEqualTo: 'comum')
                 //.where('instrutor', isEqualTo: loggedInUser.email)
                 .snapshots(),
             builder:
@@ -99,7 +103,8 @@ class _MenuInicialScreenState extends State<MenuInicialScreen> {
                     child: Card(
                       child: MaterialButton(
                         onPressed: () {
-                          goToAlunoAtividadesMain(document['usuario']);
+                          goToAlunoAtividadesMain(
+                              document['usuario'], document['nomeusuario']);
                         },
                         child: Text(
                           document['nomeusuario'],

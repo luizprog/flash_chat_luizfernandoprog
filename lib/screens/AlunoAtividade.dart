@@ -24,10 +24,13 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
   bool TemDados;
 
   String usuarioSelecionado;
+  String nomeUsuarioSelecionado;
   String atividadeSelecionada;
   String agendadiaSelecionada;
   String agendahoraSelecionada;
   String descricaoSelecionada;
+  String documentID;
+  int pontuacaoAtual = 0;
 
   static final double myTextSize = 20.0;
   final double myIconSize = 20.0;
@@ -51,6 +54,51 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
     }
   }
 
+  void _showDialogConcluir(String s, String t) {
+    // flutter defined function
+    t = "Finalizar a atividade com a seguinte conclusao:";
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          title: new Text(
+            t,
+            style: TextStyle(color: Colors.black54),
+          ),
+          content: new Text(
+            s,
+            style: TextStyle(color: Colors.black54),
+          ),
+          actions: <Widget>[
+            // usually buttons at the bottom of the dialog
+            new FlatButton(
+              child: new Text("Close"),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            new FlatButton(
+              child: new Text("Concluir"),
+              onPressed: () {
+                //pontuacaoAtual = 100;
+
+                Firestore.instance
+                    .collection("procedimento")
+                    .document(documentID)
+                    .updateData({"conclusao": "sucesso", "pontuacao": 100});
+
+                //"pontuacaoAtual": "pontuacaoAtual",
+
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   void _openAddEntryDialog() {
     Navigator.of(context).push(new MaterialPageRoute<Null>(
         builder: (BuildContext context) {
@@ -58,7 +106,7 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
             appBar: AppBar(
               backgroundColor: Colors.lightBlueAccent,
               centerTitle: true,
-              title: Text('Atividades'),
+              title: Text('Atividades ' + nomeUsuarioSelecionado),
             ),
             backgroundColor: Colors.white,
             body: ModalProgressHUD(
@@ -67,59 +115,64 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                 child: new Container(
                   child: Column(
                     children: <Widget>[
-                      new MyCard(
-                        title: new Text(
-                          usuarioSelecionado,
-                          style: myTextStyle,
-                        ),
-                        icon: new Icon(
-                          Icons.done,
-                          //size: myIconSize,
-                          //color: Colors.deepOrangeAccent,
-                        ),
-                      ),
-                      new MyCard(
-                        title: new Text(
-                          atividadeSelecionada,
-                          style: myTextStyle,
-                        ),
-                        icon: new Icon(
-                          Icons.done,
-                          //size: myIconSize,
-                          //color: Colors.deepOrangeAccent,
+                      new Card(
+                        color: Colors.white70,
+                        child: new ListTile(
+                          title: new Text(
+                            "Titulo procedimento:",
+                            style: myTextStyle,
+                          ),
+                          subtitle: Text(
+                            atividadeSelecionada,
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          enabled: true,
+                          isThreeLine: true,
                         ),
                       ),
-                      new MyCard(
-                        title: new Text(
-                          agendadiaSelecionada,
-                          style: myTextStyle,
-                        ),
-                        icon: new Icon(
-                          Icons.done,
-                          //size: myIconSize,
-                          //color: Colors.deepOrangeAccent,
-                        ),
-                      ),
-                      new MyCard(
-                        title: new Text(
-                          agendahoraSelecionada,
-                          style: myTextStyle,
-                        ),
-                        icon: new Icon(
-                          Icons.done,
-                          //size: myIconSize,
-                          //color: Colors.deepOrangeAccent,
+                      new Card(
+                        color: Colors.white70,
+                        child: new ListTile(
+                          title: new Text(
+                            "Dia da atividade:",
+                            style: myTextStyle,
+                          ),
+                          subtitle: Text(
+                            agendadiaSelecionada,
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          enabled: true,
+                          isThreeLine: true,
                         ),
                       ),
-                      new MyCard(
-                        title: new Text(
-                          descricaoSelecionada,
-                          style: myTextStyle,
+                      new Card(
+                        color: Colors.white70,
+                        child: new ListTile(
+                          title: new Text(
+                            "Horario da Atividade:",
+                            style: myTextStyle,
+                          ),
+                          subtitle: Text(
+                            agendahoraSelecionada,
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          enabled: true,
+                          isThreeLine: true,
                         ),
-                        icon: new Icon(
-                          Icons.done,
-                          //size: myIconSize,
-                          //color: Colors.deepOrangeAccent,
+                      ),
+                      new Card(
+                        color: Colors.white70,
+                        child: ListTile(
+                          title: new Text(
+                            "Descrição da atividade:",
+                            style: myTextStyle,
+                          ),
+                          subtitle: Text(
+                            descricaoSelecionada,
+                            style: TextStyle(color: Colors.black54),
+                          ),
+                          enabled: true,
+                          isThreeLine: true,
                         ),
                       ),
                     ],
@@ -127,30 +180,50 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                 ),
               ),
             ),
-            bottomSheet: Text("Tipo de ajuda:"),
-            persistentFooterButtons: <Widget>[
-              FlatButton.icon(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.thumb_down,
-                    color: Colors.deepOrangeAccent,
+            bottomNavigationBar: BottomAppBar(
+              child: new Row(
+                verticalDirection: VerticalDirection.up,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  /* new FlatButton(
+                      onPressed: null, child: Icon(Icons.done_outline)),
+                 */
+                  IconButton(
+                    icon: Icon(
+                      Icons.thumb_down,
+                      size: 36.0,
+                      color: Colors.deepOrangeAccent,
+                    ),
+                    onPressed: () {
+                      _showDialogConcluir(
+                          "Concluido totalmente com ajuda!", "");
+                    },
                   ),
-                  label: Text("Total")),
-              FlatButton.icon(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.thumbs_up_down,
-                    color: Colors.lightBlueAccent,
+                  IconButton(
+                    icon: Icon(
+                      Icons.thumbs_up_down,
+                      size: 36.0,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {
+                      _showDialogConcluir(
+                          "Concluido parcialmente com ajuda!", "");
+                    },
                   ),
-                  label: Text("Parcial")),
-              FlatButton.icon(
-                  onPressed: null,
-                  icon: Icon(
-                    Icons.thumb_up,
-                    color: Colors.green,
+                  IconButton(
+                    icon: Icon(
+                      Icons.thumb_up,
+                      size: 36.0,
+                      color: Colors.green,
+                    ),
+                    onPressed: () {
+                      _showDialogConcluir("Concluido com sucesso!", "");
+                    },
                   ),
-                  label: Text("Sucesso")),
-            ],
+                ],
+              ),
+            ),
           );
         },
         fullscreenDialog: true));
@@ -173,6 +246,7 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                 .collection('procedimento')
                 .where('usuario',
                     isEqualTo: MenuInicialScreen.usuarioSelecionado)
+                .where('conclusao', isEqualTo: "pendente")
                 .snapshots(),
             builder:
                 (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -209,12 +283,15 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                           print(document['procedimento']);
                           print(document['usuario']);
                           */
+                          nomeUsuarioSelecionado =
+                              MenuInicialScreen.nomeUsuarioSelecionado;
                           usuarioSelecionado = document['usuario'];
                           atividadeSelecionada = document['procedimento'];
                           agendadiaSelecionada = document['agendadia'];
                           agendahoraSelecionada = document['agendahora'];
                           descricaoSelecionada = document['descricao'];
-
+                          pontuacaoAtual = document['pontuacaoAtual'];
+                          documentID = document.documentID;
                           _openAddEntryDialog();
                         },
                       ); //Column
@@ -236,11 +313,15 @@ class _AlunoAtividadeScreenState extends State<AlunoAtividadeScreen> {
                           ],
                         ),
                         onPressed: () {
+                          nomeUsuarioSelecionado =
+                              MenuInicialScreen.nomeUsuarioSelecionado;
                           usuarioSelecionado = document['usuario'];
                           atividadeSelecionada = document['procedimento'];
                           agendadiaSelecionada = document['agendadia'];
                           agendahoraSelecionada = document['agendahora'];
                           descricaoSelecionada = document['descricao'];
+                          pontuacaoAtual = document['pontuacaoAtual'];
+                          documentID = document.documentID;
                           _openAddEntryDialog();
                         },
                       ); //Column

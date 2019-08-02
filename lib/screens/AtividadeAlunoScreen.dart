@@ -149,7 +149,10 @@ class _RegistroAtividadeIndividualScreenState
                         width: 1.0)),
                 padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 2.0),
                 child: StreamBuilder<QuerySnapshot>(
-                  stream: firestore.collection('usuarios').snapshots(),
+                  stream: firestore
+                      .collection('usuarios')
+                      .where("nivelDeAcesso", isEqualTo: "comum")
+                      .snapshots(),
                   builder: (BuildContext context,
                       AsyncSnapshot<QuerySnapshot> snapshot) {
                     if (!snapshot.hasData) return const Text('Carregando...');

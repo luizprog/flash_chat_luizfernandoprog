@@ -38,21 +38,19 @@ class _WelcomeScreenState extends State<WelcomeScreen>
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text(
-                  'Desenvolver',
-                  style: TextStyle(
-                    fontSize: 45.0,
-                    fontWeight: FontWeight.w900,
-                    color: Colors.black54,
-                  ),
-                  textAlign: TextAlign.right,
-                ),
                 Hero(
                   tag: 'logo',
                   child: Container(
                     child: Image.asset('images/auti.png'),
                     height: animation.value * 100,
                   ),
+                ),
+                Text(
+                  'Desenvolver',
+                  style: TextStyle(
+                      fontSize: 35.0,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.black54),
                 ),
               ],
             ),

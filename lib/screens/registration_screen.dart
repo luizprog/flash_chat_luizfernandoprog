@@ -192,7 +192,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                 password: novoCadastroSenha);
 
                         _firestore.collection('usuarios').add({
-                          'nivelDeAcesso': _currentCity,
+                          'nivelDeAcesso':
+                              _currentCity == null ? "comum" : _currentCity,
                           'usuario': novoCadastroEmail,
                           'nomeusuario': novoCadastroUsuario,
                         });

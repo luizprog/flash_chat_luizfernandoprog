@@ -107,7 +107,7 @@ class _RegistroAtividadeIndividualScreenState
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.lightBlueAccent,
-        title: Text('Auti app - Cuidador'),
+        title: Text('D'),
       ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -454,6 +454,7 @@ class _RegistroAtividadeIndividualScreenState
                         'agendahora': agendaHoraInformado,
                         'dataDaInclusao': DateTime.now(),
                         'instrutor': regloggedInUser.email,
+                        'pontuacao': 0,
                       });
 
                       setState(() {
